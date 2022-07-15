@@ -11,7 +11,7 @@ save = None
 room = None
 
 
-def main():
+def main():  # Main function
     print('------------------------------\n'
           '| SPOOKY EDITOR / BY SMOODIE |\n'
           '------------------------------\n')
@@ -35,14 +35,16 @@ def main():
     #        input("[*] Press Enter to continue...")
     #        exit()
     #   else:        (i need to convert str into int but idk how so nvm)
-        lines[5] = "room=" + str(room) + "\n"
+        lines[5] = f"room={str(room)}" + "\n"
         with open(path, 'w+') as save:
             save.writelines(lines)
         print("[*] Value changed with success.")
+        with open(path, 'r') as save:
+            lines = save.readlines()
         if lines[8] == 'weapon=0':
             choice = input("Do you want to get the axe (weapon) ? [Y/N]")
             if choice in ['y', 'Y']:
-                lines[5] = "weapon=1\n"
+                lines[8] = "weapon=1\n"
                 with open(path, 'w+') as save:
                     save.writelines(lines)
 
