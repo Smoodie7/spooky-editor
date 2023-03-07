@@ -1,6 +1,7 @@
 from tkinter import *
-from tkinter import filedialog, messagebox
+from tkinter import filedialog, messagebox, simpledialog
 from pathlib import Path
+
 
 class SpookyEditor:
     def __init__(self, master):
@@ -11,11 +12,11 @@ class SpookyEditor:
         self.master.iconphoto(False, ico)
 
         self.directory = None
-        
+
         self.label = Label(self.master, text="Select your game directory")
         self.label.pack(pady=30)
         self.label.config(font=("Helvetica", 23))
-        
+
         self.btn = Button(self.master, text="Click here to select one...", command=self.file_path, width=40)  # Select repertory button
         self.btn.pack(pady=20)
 
@@ -38,31 +39,42 @@ class SpookyEditor:
         directory1 = filedialog.askdirectory(title="Select the game directory...")
         if directory1:
             self.directory = directory1
-            self.check_file_existence()
+            self.verify_directory()
 
-    def check_file_existence(self):
-        if self.directory is not None:  # If 'directory' isn't null
-            path = Path(f"{self.directory}/save_data_main.ini")
+    def verify_directory(self):
+        if not self.directory:
+            messagebox.showerror("Error", "Please select a directory.")
+            return
 
-            if path.is_file():  # If save file exist
-                self.master.destroy()
-                self.show_editor_window()
-            else:  # Error the file doesn't exist
-                messagebox.showerror("Error!", "Save file doesn't exist!\nTry to create a new Game.")
-                self.directory = None
+        # Open the save file
+        path = Path(self.directory) / "save_data_main.ini"
+        if not path.is_file():
+            messagebox.showerror("Error", "Save file doesn't exist! Try to create a new Game.")
+            return
+        with open(path, 'r') as save_file:
+            lines = save_file.readlines()
 
-    def show_editor_window(self):
-        tk1 = Tk()
-        tk1.geometry("720x520")
-        label = Label(tk1, text="Spooky Editor")
-        label.pack(pady=30)
-        label.config(font=("Helvetica", 23))
-        tk1.mainloop()
+        # Changing room value
+        room = simpledialog.askstring("Input", "Change the room value (0-999): ", parent=self.master)
+        if not room.isdigit() or not 0 <= int(room) <= 999:
+            messagebox.showerror("Error", "You can only enter an integer between 0 and 999.")
+            return
 
-def main():
-    root = Tk()
-    SpookyEditor(root)
-    root.mainloop()
+        lines[5] = f"room={room}\n"
+        with open(path, 'w') as save_file:
+            save_file.writelines(lines)
+        messagebox.showinfo("Success", "Value changed successfully.")
 
-if __name__ == '__main__':
-    main()
+        # Change axe weapon
+        if lines[8].strip() == 'weapon=0':
+            choice = messagebox.askyesno("Input", "Do you want to get the axe (weapon)?")
+            if choice:
+                lines[8] = "weapon=1\n"
+                with open(path, 'w') as save_file:
+                    save_file.writelines(lines)
+                messagebox.showinfo("Success", "Axe weapon obtained successfully.")
+
+
+root = Tk()
+app = SpookyEditor(root)
+root.mainloop()
