@@ -1,9 +1,6 @@
 # spooky-editor
-[*] GUI VERSION IS INSTABLE, IF U HAVE PROBLEMS, USE THE NO GUI VERSION!
 
-[!] IF SPOOKY EDITOR CANT EDIT OR SIMPLY CRASH TRY TO EXECUTE IT IN ADMIN MODE!
-
-Spooky Editor is a simple program for changing multiple things (actually only your save data) on the Spooky House Of Jumpscare game
+Spooky Editor is a simple program for changing multiple things (actually only your save data) on the Spooky House Of Jumpscare game.
 
 [*] WHAT YOU CAN DO ?
 - Edit save data.
